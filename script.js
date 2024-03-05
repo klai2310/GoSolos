@@ -1,5 +1,6 @@
-const selectedValues = [];
 document.addEventListener('DOMContentLoaded', function() {
+    const selectedValues = [];
+
     const buttons = document.querySelectorAll('.select-button');
 
     buttons.forEach(button => {
@@ -14,22 +15,10 @@ document.addEventListener('DOMContentLoaded', function() {
                     selectedValues.splice(index, 1);
                 }
             }
+            checkInputs(); // Verificar inputs após clique no botão
         });
     });
 
-    const form = document.querySelector('form');
-
-    form.addEventListener('submit', function(event) {
-        if (selectedValues.length === 0) {
-            event.preventDefault();
-            alert('Selecione pelo menos uma opção.');
-        }
-    });
-});
-
-
-
-  document.addEventListener('DOMContentLoaded', function() {
     const form = document.querySelector('form');
     const nameInput = document.getElementById('name');
     const emailInput = document.getElementById('email');
@@ -41,37 +30,24 @@ document.addEventListener('DOMContentLoaded', function() {
         const emailValue = emailInput.value.trim();
         const messageValue = messageInput.value.trim();
 
-        if (nameValue !== '' && emailValue !== '' && messageValue !== '') {
-            submitButton.disabled = false;
-        } else {
-            submitButton.disabled = true;
-        }
-    }
-
-    function checkEmail() {
-        const emailValue = emailInput.value.trim();
         const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-        if (emailPattern.test(emailValue)) {
-            emailInput.classList.remove('invalid');
-        } else {
-            emailInput.classList.add('invalid');
-        }
-    }
+        const isNameValid = nameValue !== '';
+        const isEmailValid = emailPattern.test(emailValue);
+        const isMessageValid = messageValue.length >= 20;
 
-    function checkMessage() {
-        const messageValue = messageInput.value.trim();
-
-        if (messageValue.length >= 20) {
-            messageInput.classList.remove('invalid');
+        if (isNameValid && isEmailValid && isMessageValid && selectedValues.length > 0) {
+            submitButton.disabled = false;
+            submitButton.style.backgroundColor = '#A91079'; // Cor do botão ativado
         } else {
-            messageInput.classList.add('invalid');
+            submitButton.disabled = true;
+            submitButton.style.backgroundColor = '#ccc'; // Cor do botão desativado
         }
     }
 
     form.addEventListener('input', checkInputs);
-    emailInput.addEventListener('input', checkEmail);
-    messageInput.addEventListener('input', checkMessage);
+    emailInput.addEventListener('input', checkInputs);
+    messageInput.addEventListener('input', checkInputs);
 
     form.addEventListener('submit', function(event) {
         event.preventDefault();
@@ -88,7 +64,7 @@ document.addEventListener('DOMContentLoaded', function() {
         nameInput.value = '';
         emailInput.value = '';
         messageInput.value = '';
-        selectedValues = []
+        selectedValues.length = 0;
         submitButton.disabled = true;
 
         alert('Seu formulário foi enviado com sucesso!');
